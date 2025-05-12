@@ -1,0 +1,160 @@
+Lesson 36: To-Do List App Planning Document
+Project Overview
+
+App Name: Anfield To-Do List
+Purpose: A user-friendly app to manage tasks for Liverpool FC events (e.g., match planning, travel logistics), storing tasks in a JSON file for persistence.
+Target User: Liverpool FC fans and event planners (e.g., AwayDays app users, Apr 4, 2025).
+Goals: Enable task management (add, view, delete), ensure robustness with error handling, and provide intuitive navigation, aligning with Naval’s high-impact work.
+
+Feature Definition and Prioritization
+NEW: Feature prioritization involves listing all desired features and ranking them by importance to meet project goals efficiently.
+
+Core Features (Must-Have, High Priority):
+Add Task: Users can add a task with a title, due date, and priority (e.g., high, medium, low).
+View Tasks: Display all tasks with details (title, due date, priority, creation time).
+Delete Task: Remove a task by selecting its number from the list.
+Save Tasks: Persist tasks to a JSON file for data retention.
+Load Tasks: Load tasks from a JSON file on startup.
+
+
+Nice-to-Have Features (Lower Priority, Future Enhancements):
+Update Task: Modify an existing task’s title, due date, or priority.
+Filter Tasks: View tasks by priority or due date.
+Sort Tasks: Sort tasks by due date or priority.
+
+
+Prioritization Rationale: Core features ensure basic CRUD functionality (create, read, delete) and persistence, meeting the minimum viable product (MVP) needs for AwayDays (Apr 4, 2025). Nice-to-have features add polish but are deferred to focus on high-impact deliverables, aligning with Naval’s judgment for impactful work.
+
+Logic Sketch (Pseudocode)
+NEW: Pseudocode outlines the program’s logic in plain language before coding, clarifying implementation steps and reducing errors.
+# Initialize empty task list
+tasks = []
+
+# Load tasks from JSON file
+FUNCTION load_tasks(filename):
+    TRY:
+        IF file exists:
+            Open file in read mode
+            Read JSON data into tasks
+        ELSE:
+            Return empty list
+    CATCH FileNotFoundError:
+        Print "File not found, starting fresh"
+        Return empty list
+    CATCH JSONDecodeError:
+        Print "Corrupted JSON file"
+        Return empty list
+    CATCH PermissionError:
+        Print "No permission to read file"
+        Return empty list
+    CATCH IOError:
+        Print "File read error"
+        Return empty list
+
+# Save tasks to JSON file
+FUNCTION save_tasks(tasks, filename):
+    TRY:
+        Create directory if not exists
+        Open file in write mode
+        Write tasks as JSON with indentation
+        Print "Saved successfully"
+    CATCH PermissionError:
+        Print "No permission to write"
+    CATCH IOError:
+        Print "File write error"
+    CATCH TypeError:
+        Print "Invalid data format"
+
+# Add a new task
+FUNCTION add_task(tasks, title, due_date, priority):
+    IF title is empty or not a string:
+        Print "Invalid title"
+        Return
+    IF due_date is not in YYYY-MM-DD format:
+        Print "Invalid date format"
+        Return
+    IF priority is not in ["high", "medium", "low"]:
+        Print "Invalid priority"
+        Return
+    Append task dictionary {title, due_date, priority, created_timestamp} to tasks
+    Print "Task added"
+
+# View all tasks
+FUNCTION view_tasks(tasks):
+    IF tasks is empty:
+        Print "No tasks"
+        Return
+    FOR EACH task in tasks (index starting at 1):
+        Print index, title, due_date, priority, created_timestamp
+
+# Delete a task
+FUNCTION delete_task(tasks, index):
+    IF index is invalid (not integer, out of range):
+        Print "Invalid index"
+        Return
+    Remove task at index
+    Print "Task deleted"
+
+# Main program loop
+Get user’s name
+Load tasks
+WHILE True:
+    Print menu: add, view, delete, save, quit
+    Get user action (lowercase, stripped)
+    IF action is empty:
+        Print "Invalid action"
+        Continue
+    IF action is "quit":
+        Save tasks
+        Print goodbye
+        Break
+    IF action is "view":
+        Call view_tasks
+    IF action is "save":
+        Call save_tasks
+    IF action is "add":
+        Get title, due_date, priority from user
+        Call add_task
+    IF action is "delete":
+        Call view_tasks
+        Get index from user
+        Call delete_task
+    ELSE:
+        Print "Invalid action"
+    IF tasks exist:
+        Print encouragement (e.g., "Planning Anfield like a champion!")
+
+Program Structure Design
+NEW: Modular program design organizes code into functions for each feature, ensuring clarity, reusability, and maintainability.
+
+Main Components:
+Data Structure: List of dictionaries (tasks), each task with title (string), due_date (string, YYYY-MM-DD), priority (string: high, medium, low), created (timestamp).
+File Storage: JSON file (tasks.json) for persistent storage, with pretty-printing (indent=2).
+Functions:
+load_tasks(filename): Loads tasks from JSON, handles errors (FileNotFoundError, JSONDecodeError, PermissionError, IOError).
+save_tasks(tasks, filename): Saves tasks to JSON, creates directory if needed, handles errors.
+add_task(tasks, title, due_date, priority): Adds a task with validation (non-empty strings, date format, priority values).
+view_tasks(tasks): Displays tasks with 1-based indexing.
+delete_task(tasks, index): Deletes a task by index with validation.
+
+
+Main Loop: Menu-driven interface (add, view, delete, save, quit), sanitizes input (.lower().strip()), and provides feedback.
+
+
+Error Handling: Catch specific exceptions for file operations and input validation, ensuring robustness.
+Usability: Clear prompts, numbered task list, Liverpool FC theme (e.g., “Plan Anfield like a champion!”), and confirmation messages.
+Directory: Store tasks.json in data/tasks.json to test directory creation (os.makedirs).
+
+Implementation Notes
+
+Tech Stack: Python with json, datetime, os modules (Lessons 29-34, May 11-14, 2025).
+Validation: Use isinstance, .strip() (Lessons 23, 31, 33), datetime.strptime for dates (Lesson 33).
+Storage Path: Use data/tasks.json to leverage os.makedirs (Lesson 34).
+Future Enhancements: Add update, filter, or sort features after core MVP is built, prioritizing high-impact deliverables.
+
+Deliverables
+
+Save this planning document as day36_planning.md.
+Implement the app in Lesson 37, using this structure to ensure clarity and impact.
+Upload to GitHub and link in Google Sheet (Day 36, Row 37).
+
